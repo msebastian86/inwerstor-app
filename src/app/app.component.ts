@@ -16,13 +16,14 @@ export class AppComponent {
 	cenaZakupu:number = 243000;
 	rynekZakupu: string = '';
 	kwotaKredytu: number = 0;
+	wkladWlasny: number = 0;
+	prowizjaBanku: number = 0;
+	marzaBanku: number = 0;
+	lataKredytu: number = 0;
+
 
 	constructor() {}
 	ngOnInit() {}
-
-	prowizjaBanku() {
-		return this.kwotaKredytu*0.22;
-	}
 
 
 
