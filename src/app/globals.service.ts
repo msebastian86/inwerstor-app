@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class GlobalsService {
 
-	public cena:number = 1111;
+	// public cenaZakupu:number = 666;
 
-	getData(){
-		alert('ss');
-		return this.cena;
-	}
 
-	insertData(data: number){
-		this.cena = data;
-		console.log(this.cena);
-	}
+	// constructor(){}
 
-  	constructor() { }
+ //  	getCenaZakupu() {
+ //  	    return this.cenaZakupu
+ //  	    .map(response => <CenaZakupu[]>)
+ //  	}
 
 }

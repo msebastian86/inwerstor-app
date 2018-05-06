@@ -1,13 +1,60 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>{{title}}</h1>
-  Cena zakupu: <input #input><button (click)="onUpdateData(input.value)">update</button>
-  <p>{{cena.cena}}</p>
-  <br/>Wkład własny: <input [(ngModel)]="wkladWlasny"/>
-  <br/>Wkład własny(%) = {{(wkladWlasny/cena.cena*100)}}%
-  <br/><br/>
-   
-  <app-koszty-pierwotny></app-koszty-pierwotny>
-  <app-koszty-wtorny></app-koszty-wtorny>
+<div style="text-align:center" class="container">
+
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>{{title}} <i class="fa fa-money" aria-hidden="true" style="color: green;"></i></h1>
+			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" /></p>
+			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny"/></p>
+			<p><strong>Wkład własny wyrażony procentowo:</strong> <span *ngIf="wkladWlasny">{{(wkladWlasny/cenaZakupu | percent: "1.1-2")}}</span></p>
+			<p><strong>Kwota kredytu:</strong> <input [(ngModel)]="kwotaKredytu" value="{{cenaZakupu-wkladWlasny}}"/></p>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 offset-md-3">
+			<div class="jumbotron">
+
+				<h3>Wybierz na jakim rynku kupujesz</h3>
+				
+				<div>
+				    <div class="form-check form-check-inline">
+				    	<input class="form-check-input" id="rynek_p" type="radio" [(ngModel)]="rynekZakupu" name="rynekZakupu" value="rynek_pierwotny">
+				    	<label class="form-check-label" for="rynek_p">Rynek pierwotny</label>
+				    </div>
+				    <div class="form-check form-check-inline">
+				    	<input class="form-check-input" id="rynek_w" type="radio" [(ngModel)]="rynekZakupu" name="rynekZakupu" value="rynek_wtorny">
+				    	<label class="form-check-label" for="rynek_w">Rynek wtórny</label>
+				    </div>
+				</div>
+
+		    	<h5 *ngIf="rynekZakupu=='rynek_pierwotny'">Koszty na rynku pierwotnym</h5>
+				<h5 *ngIf="rynekZakupu=='rynek_wtorny'">Koszty na rynku Wtórnym</h5>
+
+
+				<div *ngIf="rynekZakupu=='rynek_pierwotny'">
+					<p>Notariusz: {{cenaZakupu*0.03 | number: "1.1-2"}}</p>
+				</div>
+
+				<div *ngIf="rynekZakupu=='rynek_wtorny'">
+					<p>Notariusz: {{cenaZakupu*0.022 | number: "1.1-2"}}</p>
+					<p>Podatek pcc: {{cenaZakupu*0.02 | number: "1.1-2"}}</p>
+					<p>Prowizja Agencji: <input [(ngModel)]="prowizjaAgencji" type="number" value="1" min="0" max="10" style="width:40px;" />% = <span *ngIf="prowizjaAgencji">{{cenaZakupu*(prowizjaAgencji/100) | number: "1.1-2"}}</span></p>
+				</div>
+
+				<h3>Kredyt</h3>
+
+				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />% = {{kwotaKredytu*(prowizjaBanku*0.01)}}</p>
+				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
+				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
+
+				Orientacyjna wysokość raty: xxx
+
+			</div>
+		</div>
+
+	</div>
+
+	<img src="https://media.giphy.com/media/bCqgz0UqNCeOc/giphy.gif" alt="" class="center-block">
 
 </div>

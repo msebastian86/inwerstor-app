@@ -1,40 +1,29 @@
 import { Component, Injectable, Input, Output, EventEmitter } from '@angular/core';
-import { KosztyPierwotnyComponent } from './koszty-pierwotny/koszty-pierwotny.component';
 import { GlobalsService } from './globals.service';
+import 'rxjs/add/operator/map';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [GlobalsService]
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss'],
+	providers: [GlobalsService]
 })
 
 
 export class AppComponent {
 
-	title = 'Investor App';
-  cenaZakupu: number = 9;
-	// data: number = 2;
+	title:string = 'Investor App';
+	cenaZakupu:number = 243000;
+	rynekZakupu: string = '';
+	kwotaKredytu: number = 0;
 
-  constructor(public cena: GlobalsService) {}
-  
-  onUpdateData(data:number){
-    this.cena.insertData(data);
-  }
+	constructor() {}
+	ngOnInit() {}
 
-  onGetData(){
-    this.cena.getData();
-  }
+	prowizjaBanku() {
+		return this.kwotaKredytu*0.22;
+	}
 
 
-  ngOnInit() {}
-
-
-
-
-  // inwestycjaDane = [
-  //   new InwestycjaDane(1000, 10),
-  //   new InwestycjaDane(24000, 40)
-  // ];
 
 }

@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+/* Application-wide Styles */
+
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.css";
+
+
+$primary: #404E7C;
+$secondary: #71B48D;
+$action: #8C0928;
+
+h1{
+	color: $primary;
+}
+
+body {
+  background-color: white;
+}
+
+.jumbotron{
+	padding: 2rem;
+}
+
+.form-check-inline{
+	position: relative;
+	margin: 0 30px 0 0;
+
+	input[type=checkbox], input[type=radio]{
+		position: absolute;
+		left: 0;
+		top: 2px;
+	}
+
+	.form-check-label{
+		padding: 0 0 30px 0;
+	}
+}
