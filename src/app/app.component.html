@@ -7,15 +7,16 @@
 			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" /></p>
 			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny"/></p>
 			<p><strong>Wkład własny wyrażony procentowo:</strong> <span *ngIf="wkladWlasny">{{(wkladWlasny/cenaZakupu | percent: "1.1-2")}}</span></p>
-			<p><strong>Kwota kredytu:</strong> <input [(ngModel)]="kwotaKredytu" value="{{cenaZakupu-wkladWlasny}}"/></p>
+			<p><strong>Kwota kredytu:</strong> <span [innerText]="kwotaKredytu()"></span></p>
 
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-6 offset-md-3">
-			<div class="jumbotron">
+	<div class="row mb-4">
+		<div class="col-md-6 col-lg-7">
+			<div class="jumbotron high">
 
-				<h3>Wybierz na jakim rynku kupujesz</h3>
+				<h3 class="mb-4">Wybierz na jakim rynku kupujesz</h3>
+				<hr/>
 				
 				<div>
 				    <div class="form-check form-check-inline">
@@ -33,27 +34,82 @@
 
 
 				<div *ngIf="rynekZakupu=='rynek_pierwotny'">
-					<p>Notariusz: {{cenaZakupu*0.03 | number: "1.1-2"}}</p>
+					<p [innerText]="'Notariusz: '+ kosztNotariusz()"></p>
 				</div>
 
 				<div *ngIf="rynekZakupu=='rynek_wtorny'">
-					<p>Notariusz: {{cenaZakupu*0.022 | number: "1.1-2"}}</p>
-					<p>Podatek pcc: {{cenaZakupu*0.02 | number: "1.1-2"}}</p>
-					<p>Prowizja Agencji: <input [(ngModel)]="prowizjaAgencji" type="number" value="1" min="0" max="10" style="width:40px;" />% = <span *ngIf="prowizjaAgencji">{{cenaZakupu*(prowizjaAgencji/100) | number: "1.1-2"}}</span></p>
+					<p [innerText]="'Notariusz: '+ kosztNotariusz()"></p>
+					<p>Podatek pcc: {{cenaZakupu*0.02}}</p>
+					<p>Prowizja Agencji: <input [(ngModel)]="prowizjaAgencji" type="number" value="1" min="0" max="10" style="width:40px;" />% = <span *ngIf="prowizjaAgencji">{{cenaZakupu*(prowizjaAgencji/100)}}</span></p>
 				</div>
 
-				<h3>Kredyt</h3>
+				<h3 class="mb-4">Kredyt</h3>
+				<hr/>
 
 				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
 				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
 				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
 
-				Orientacyjna wysokość raty: xxx
+				<p>Wysokość Prowizji Banku: {{cenaZakupu*(prowizjaBanku/100)}}</p>
+				<p>Orientacyjna wysokość raty: <strong [innerText]="rataKredytu()"></strong> /miesięcznie, <strong>{{lataKredytu*12}}</strong> rat</p>
 
 			</div>
 		</div>
 
+		<div class="col-md-6 col-lg-5">
+			<div class="jumbotron high alert alert-warning">
+				<h3 class="mb-4">Koszty:</h3>
+				<hr/>
+				
+
+				<h4 class="text-left mb-3">Wstępne:</h4>
+
+				<ul class="list-group mb-3">
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    Wkład własny
+				    <span class="badge badge-primary badge-pill">xxxxx</span>
+				  </li>
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    Prowizje
+				    <span class="badge badge-primary badge-pill">xxx</span>
+				  </li>
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    Podatek
+				    <span class="badge badge-primary badge-pill">x</span>
+				  </li>
+				</ul>
+
+				<h4 class="text-left mb-3">Stałe:</h4>
+				
+				<ul class="list-group">
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    Miesięczna rata
+				    <span class="badge badge-primary badge-pill">xxx</span>
+				  </li>
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    Ubezpieczenia
+				    <span class="badge badge-primary badge-pill">xx</span>
+				  </li>
+
+				</ul>
+
+			</div>
+		</div>
 	</div>
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="jumbotron high alert alert-success">
+
+				<h3 class="mb-4">Zwrot z inwestycji <i class="fa fa-line-chart" aria-hidden="true"></i></h3>
+				<hr/>
+
+				<p>Szacunkowy dochód z najmu: xxx</p>
+				<p>Szacunkowy zysk miesięczny z najmu: xxx</p>
+			</div>
+		</div>
+	</div>
+
 
 	<img src="https://media.giphy.com/media/bCqgz0UqNCeOc/giphy.gif" alt="" class="center-block">
 
