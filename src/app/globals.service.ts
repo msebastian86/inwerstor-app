@@ -5,14 +5,6 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class GlobalsService {
 
-	// public cenaZakupu:number = 666;
 
-
-	// constructor(){}
-
- //  	getCenaZakupu() {
- //  	    return this.cenaZakupu
- //  	    .map(response => <CenaZakupu[]>)
- //  	}
 
 }

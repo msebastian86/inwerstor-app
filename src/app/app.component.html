@@ -5,7 +5,7 @@
 		<div class="col-sm-12">
 			<h1>{{title}} <i class="fa fa-money" aria-hidden="true" style="color: green;"></i></h1>
 			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" /></p>
-			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny"/></p>
+			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny" (ngModelChange)="changeWkladWlasny($event)" type="number"/></p>
 			<p><strong>Wkład własny wyrażony procentowo:</strong> <span *ngIf="wkladWlasny">{{(wkladWlasny/cenaZakupu | percent: "1.1-2")}}</span></p>
 			<p><strong>Kwota kredytu:</strong> <span [innerText]="kwotaKredytu()"></span></p>
 
@@ -46,11 +46,11 @@
 				<h3 class="mb-4">Kredyt</h3>
 				<hr/>
 
-				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
+				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" (ngModelChange)="changeProwizjaBanku($event)" type="number" value="1" min="0" max="10" style="width:40px;"/>% = {{cenaZakupu*(prowizjaBanku/100)}}</p>
 				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
 				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
 
-				<p>Wysokość Prowizji Banku: {{cenaZakupu*(prowizjaBanku/100)}}</p>
+
 				<p>Orientacyjna wysokość raty: <strong [innerText]="rataKredytu()"></strong> /miesięcznie, <strong>{{lataKredytu*12}}</strong> rat</p>
 
 			</div>
@@ -60,35 +60,22 @@
 			<div class="jumbotron high alert alert-warning">
 				<h3 class="mb-4">Koszty:</h3>
 				<hr/>
-				
+					
+			
+				<h4 class="text-left mb-3">Początkowe: <span class="badge badge-primary badge-pill">{{kosztyTotal}}</span></h4>
 
-				<h4 class="text-left mb-3">Wstępne:</h4>
-
-				<ul class="list-group mb-3">
-				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Wkład własny
-				    <span class="badge badge-primary badge-pill">xxxxx</span>
-				  </li>
-				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Prowizje
-				    <span class="badge badge-primary badge-pill">xxx</span>
-				  </li>
-				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Podatek
-				    <span class="badge badge-primary badge-pill">x</span>
-				  </li>
-				</ul>
+			
 
 				<h4 class="text-left mb-3">Stałe:</h4>
 				
 				<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
 				    Miesięczna rata
-				    <span class="badge badge-primary badge-pill">xxx</span>
+				    <span class="badge badge-primary badge-pill" [innerText]="rataKredytu()"></span>
 				  </li>
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
 				    Ubezpieczenia
-				    <span class="badge badge-primary badge-pill">xx</span>
+				    <span class="badge badge-primary badge-pill">xxx</span>
 				  </li>
 
 				</ul>
