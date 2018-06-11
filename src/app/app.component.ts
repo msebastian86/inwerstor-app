@@ -25,16 +25,16 @@ export class AppComponent {
 	lataKredytu: number = 30;
 	oprocentowanieWibor: number = 2;
 	rata: number;
-
+	dochod: number = (this.czynsz - this.rata);
 	cost: number = this.wkladWlasny + (this.cenaZakupu*(this.prowizjaBanku/100));
 
-	constructor(private data: GlobalsService){
-		this.newTotalCost();
-	}
-
+	constructor(private data: GlobalsService) {}
 
 	ngOnInit(){
 		this.data.currentCost.subscribe(cost => this.cost = cost);
+		this.data.currentRata.subscribe(rata => this.rata = rata);
+		this.newTotalCost();
+		this.getDochod();
 	}
 	
 	kwotaKredytu(){
@@ -43,16 +43,14 @@ export class AppComponent {
 	}
 
 	rataKredytu(){
-
 		let oprocentowanie = (this.oprocentowanieWibor + this.marzaBanku)/100;
 		let q = Math.pow(1 + oprocentowanie/12, this.lataKredytu*12);
 		this.rata = this.kredytKwota * q * ((1 + oprocentowanie/12 - 1) / (q-1));
-
-		return this.rata.toFixed(2);
+		this.data.changeRata(this.kredytKwota * q * ((1 + oprocentowanie/12 - 1) / (q-1)));
 	}
 
-	dochod(){
-		return (this.czynsz - this.rata).toFixed(2);
+	getDochod(){
+		this.dochod = (this.czynsz - this.rata);
 	}
 
 	newTotalCost(){

@@ -12,4 +12,12 @@ export class GlobalsService {
 		this.totalCostSource.next(cost);
 	}
 
+
+	private rataKredytu = new BehaviorSubject<number>(777);
+	currentRata = this.rataKredytu.asObservable();
+
+	changeRata (rata: number){
+		this.rataKredytu.next(rata);
+	}
+
 }

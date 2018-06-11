@@ -4,8 +4,8 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<h1>{{title}} <i class="fa fa-money" aria-hidden="true" style="color: green;"></i></h1>
-			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" type="number" step="1000" (change)="newTotalCost()"/></p>
-			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny" type="number" step="1000" (change)="newTotalCost()"/></p>
+			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" type="number" step="1000" (change)="newTotalCost()" (change)="rataKredytu()"/></p>
+			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny" type="number" step="1000" (change)="newTotalCost()" (change)="rataKredytu()" (change)="getDochod()"/></p>
 			<p><strong>Wkład własny wyrażony procentowo:</strong> <span *ngIf="wkladWlasny">{{(wkladWlasny/cenaZakupu | percent: "1.1-2")}}</span></p>
 			<p><strong>Kwota kredytu:</strong> <span [innerText]="kwotaKredytu()"></span></p>
 
@@ -47,10 +47,10 @@
 				<hr/>
 
 				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" type="number" value="1" min="0" max="10" style="width:40px;" (change)="newTotalCost()"/>% = {{cenaZakupu*(prowizjaBanku/100)}}</p>
-				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;"/>%</p>
-				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
+				<p>Marża banku: <input [(ngModel)]="marzaBanku" (change)="rataKredytu()" (change)="getDochod()" type="number" value="1" min="0" max="10" style="width:40px;"/>%</p>
+				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" (change)="rataKredytu()" (change)="getDochod()" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
 
-				<p>Orientacyjna wysokość raty: <strong [innerText]="rataKredytu()"></strong> /miesięcznie, <strong>{{lataKredytu*12}}</strong> rat</p>
+				<p>Orientacyjna wysokość raty: <strong>{{rata | number:'1.1-2'}}</strong> /miesięcznie, <strong>{{lataKredytu*12}}</strong> rat</p>
 
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 			<div class="jumbotron high alert alert-success">
 				<h3 class="mb-4">Koszty:</h3>
 				<h4 class="text-left mb-3">Początkowe: <span class="badge badge-primary badge-pill">{{cost}}</span></h4>
-				<h4 class="text-left mb-3">Stałe: <span class="badge badge-primary badge-pill" [innerText]="rataKredytu()"></span></h4>
+				<h4 class="text-left mb-3">Stałe: <span class="badge badge-primary badge-pill" ></span></h4>
 				
 				<hr/>
 
@@ -68,7 +68,7 @@
 				<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
 				    Wysokość czynszu
-				    <span class="badge badge-primary badge-pill"><input [(ngModel)]="czynsz" type="number" step="10" class="pill-input"/></span>
+				    <span class="badge badge-primary badge-pill"><input [(ngModel)]="czynsz" (change)="getDochod()" type="number" step="10" class="pill-input"/></span>
 				  </li>
 				</ul>
 
@@ -76,8 +76,8 @@
 				
 				<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Rata - czynsz <span *ngIf="dochod()>0" class="bg-success white">ZYSK:</span> <span *ngIf="dochod()<0" class="bg-danger white">STRATA:</span>
-				    <span class="badge badge-primary badge-pill" [innerText]="dochod()"></span>
+				    Rata - czynsz <span *ngIf="dochod>0" class="bg-success white">ZYSK:</span> <span *ngIf="dochod<0" class="bg-danger white">STRATA:</span>
+				    <span class="badge badge-primary badge-pill">{{dochod | number:'1.1-2'}}</span>
 				  </li>
 
 				</ul>
