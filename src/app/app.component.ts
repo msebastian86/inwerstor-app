@@ -1,6 +1,5 @@
-import { Component, Injectable, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GlobalsService } from './globals.service';
-import 'rxjs/add/operator/map';
 
 @Component({
 	selector: 'app-root',
@@ -16,49 +15,53 @@ export class AppComponent {
 	cenaZakupu:number = 243000;
 	rynekZakupu: string = '';
 	wkladWlasny: number = 77000;
+	podatekPcc: number = 0.02;
 	kredytKwota: number;
+	notariusz: number = 3000;
 	prowizjaBanku: number = 2;
+	prowizjaAgencji: number = 0;
+	czynsz: number = 0;
 	marzaBanku: number = 1.8;
 	lataKredytu: number = 30;
 	oprocentowanieWibor: number = 2;
+	rata: number;
 
-	kosztyTotal:number = this.wkladWlasny + (this.cenaZakupu*(this.prowizjaBanku/100));
+	cost: number = this.wkladWlasny + (this.cenaZakupu*(this.prowizjaBanku/100));
+
+	constructor(private data: GlobalsService){
+		this.newTotalCost();
+	}
 
 
+	ngOnInit(){
+		this.data.currentCost.subscribe(cost => this.cost = cost);
+	}
+	
 	kwotaKredytu(){
 		this.kredytKwota = this.cenaZakupu - this.wkladWlasny;
 		return this.kredytKwota;
 	}
 
-	changeWkladWlasny(val:number)
-	{
-	   this.wkladWlasny = val;
-	   this.kosztyTotal = val + (this.cenaZakupu*(this.prowizjaBanku/100));
-	}
-
-	changeProwizjaBanku(val:number)
-	{
-	   this.prowizjaBanku = val;
-	   this.kosztyTotal = this.wkladWlasny + (this.cenaZakupu*(val/100));
-	}
-
-
-
-	kosztNotariusz(){
-		// TODO
-		return 2000;
-	}
-
-
 	rataKredytu(){
 
 		let oprocentowanie = (this.oprocentowanieWibor + this.marzaBanku)/100;
 		let q = Math.pow(1 + oprocentowanie/12, this.lataKredytu*12);
-		let rata = this.kredytKwota * q * ((1 + oprocentowanie/12 - 1) / (q-1));
+		this.rata = this.kredytKwota * q * ((1 + oprocentowanie/12 - 1) / (q-1));
 
-		return rata.toFixed(2);
-		// return miesiaceKredytu;
+		return this.rata.toFixed(2);
+	}
 
+	dochod(){
+		return (this.czynsz - this.rata).toFixed(2);
+	}
+
+	newTotalCost(){
+
+		if(this.rynekZakupu=="rynek_pierwotny"){
+			this.data.changeCost(this.wkladWlasny + this.cenaZakupu*(this.prowizjaBanku/100) + this.notariusz);
+		} else {
+			this.data.changeCost(this.wkladWlasny + this.cenaZakupu*(this.prowizjaBanku/100) + (this.cenaZakupu*(this.prowizjaAgencji/100)) + this.notariusz + (this.cenaZakupu * this.podatekPcc));
+		}
 	}
 
 

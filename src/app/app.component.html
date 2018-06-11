@@ -4,15 +4,15 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<h1>{{title}} <i class="fa fa-money" aria-hidden="true" style="color: green;"></i></h1>
-			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" /></p>
-			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny" (ngModelChange)="changeWkladWlasny($event)" type="number"/></p>
+			<p><strong>Cena zakupu:</strong> <input [(ngModel)]="cenaZakupu" type="number" step="1000" (change)="newTotalCost()"/></p>
+			<p><strong>Wkład własny:</strong> <input [(ngModel)]="wkladWlasny" type="number" step="1000" (change)="newTotalCost()"/></p>
 			<p><strong>Wkład własny wyrażony procentowo:</strong> <span *ngIf="wkladWlasny">{{(wkladWlasny/cenaZakupu | percent: "1.1-2")}}</span></p>
 			<p><strong>Kwota kredytu:</strong> <span [innerText]="kwotaKredytu()"></span></p>
 
 		</div>
 	</div>
 	<div class="row mb-4">
-		<div class="col-md-6 col-lg-7">
+		<div class="col-md-6 col-lg-7 mb-5">
 			<div class="jumbotron high">
 
 				<h3 class="mb-4">Wybierz na jakim rynku kupujesz</h3>
@@ -20,11 +20,11 @@
 				
 				<div>
 				    <div class="form-check form-check-inline">
-				    	<input class="form-check-input" id="rynek_p" type="radio" [(ngModel)]="rynekZakupu" name="rynekZakupu" value="rynek_pierwotny">
+				    	<input class="form-check-input" id="rynek_p" type="radio" [(ngModel)]="rynekZakupu" (change)="newTotalCost()" name="rynekZakupu" value="rynek_pierwotny">
 				    	<label class="form-check-label" for="rynek_p">Rynek pierwotny</label>
 				    </div>
 				    <div class="form-check form-check-inline">
-				    	<input class="form-check-input" id="rynek_w" type="radio" [(ngModel)]="rynekZakupu" name="rynekZakupu" value="rynek_wtorny">
+				    	<input class="form-check-input" id="rynek_w" type="radio" [(ngModel)]="rynekZakupu" (change)="newTotalCost()" name="rynekZakupu" value="rynek_wtorny">
 				    	<label class="form-check-label" for="rynek_w">Rynek wtórny</label>
 				    </div>
 				</div>
@@ -34,48 +34,50 @@
 
 
 				<div *ngIf="rynekZakupu=='rynek_pierwotny'">
-					<p [innerText]="'Notariusz: '+ kosztNotariusz()"></p>
+					<p (change)="newTotalCost()">Notariusz: {{notariusz}}</p>
 				</div>
 
 				<div *ngIf="rynekZakupu=='rynek_wtorny'">
-					<p [innerText]="'Notariusz: '+ kosztNotariusz()"></p>
-					<p>Podatek pcc: {{cenaZakupu*0.02}}</p>
-					<p>Prowizja Agencji: <input [(ngModel)]="prowizjaAgencji" type="number" value="1" min="0" max="10" style="width:40px;" />% = <span *ngIf="prowizjaAgencji">{{cenaZakupu*(prowizjaAgencji/100)}}</span></p>
+					<p (change)="newTotalCost()">Notariusz: {{notariusz}}</p>
+					<p>Podatek pcc: {{cenaZakupu*podatekPcc}}</p>
+					<p>Prowizja Agencji: <input [(ngModel)]="prowizjaAgencji" type="number" value="1" min="0" max="10" style="width:40px;" (change)="newTotalCost()"/>% = <span *ngIf="prowizjaAgencji">{{cenaZakupu*(prowizjaAgencji/100)}}</span></p>
 				</div>
 
 				<h3 class="mb-4">Kredyt</h3>
 				<hr/>
 
-				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" (ngModelChange)="changeProwizjaBanku($event)" type="number" value="1" min="0" max="10" style="width:40px;"/>% = {{cenaZakupu*(prowizjaBanku/100)}}</p>
-				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;" />%</p>
+				<p>Prowizja banku: <input [(ngModel)]="prowizjaBanku" type="number" value="1" min="0" max="10" style="width:40px;" (change)="newTotalCost()"/>% = {{cenaZakupu*(prowizjaBanku/100)}}</p>
+				<p>Marża banku: <input [(ngModel)]="marzaBanku" type="number" value="1" min="0" max="10" style="width:40px;"/>%</p>
 				<p>Ilość lat kredytu: <input [(ngModel)]="lataKredytu" type="number" value="30" min="1" max="35" style="width:40px;" /> lat</p>
-
 
 				<p>Orientacyjna wysokość raty: <strong [innerText]="rataKredytu()"></strong> /miesięcznie, <strong>{{lataKredytu*12}}</strong> rat</p>
 
 			</div>
 		</div>
 
-		<div class="col-md-6 col-lg-5">
-			<div class="jumbotron high alert alert-warning">
+		<div class="col-md-6 col-lg-5 mb-5">
+			<div class="jumbotron high alert alert-success">
 				<h3 class="mb-4">Koszty:</h3>
+				<h4 class="text-left mb-3">Początkowe: <span class="badge badge-primary badge-pill">{{cost}}</span></h4>
+				<h4 class="text-left mb-3">Stałe: <span class="badge badge-primary badge-pill" [innerText]="rataKredytu()"></span></h4>
+				
 				<hr/>
-					
-			
-				<h4 class="text-left mb-3">Początkowe: <span class="badge badge-primary badge-pill">{{kosztyTotal}}</span></h4>
 
-			
-
-				<h4 class="text-left mb-3">Stałe:</h4>
+				<h3 class="mb-4 text-left">Przychody:</h3>
 				
 				<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Miesięczna rata
-				    <span class="badge badge-primary badge-pill" [innerText]="rataKredytu()"></span>
+				    Wysokość czynszu
+				    <span class="badge badge-primary badge-pill"><input [(ngModel)]="czynsz" type="number" step="10" class="pill-input"/></span>
 				  </li>
+				</ul>
+
+				<h3 class="mt-3 mb-4 text-left">Zysk/Strata:</h3>
+				
+				<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Ubezpieczenia
-				    <span class="badge badge-primary badge-pill">xxx</span>
+				    Rata - czynsz <span *ngIf="dochod()>0" class="bg-success white">ZYSK:</span> <span *ngIf="dochod()<0" class="bg-danger white">STRATA:</span>
+				    <span class="badge badge-primary badge-pill" [innerText]="dochod()"></span>
 				  </li>
 
 				</ul>
@@ -83,21 +85,5 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="row mb-4">
-		<div class="col-12">
-			<div class="jumbotron high alert alert-success">
-
-				<h3 class="mb-4">Zwrot z inwestycji <i class="fa fa-line-chart" aria-hidden="true"></i></h3>
-				<hr/>
-
-				<p>Szacunkowy dochód z najmu: xxx</p>
-				<p>Szacunkowy zysk miesięczny z najmu: xxx</p>
-			</div>
-		</div>
-	</div>
-
-
-	<img src="https://media.giphy.com/media/bCqgz0UqNCeOc/giphy.gif" alt="" class="center-block">
 
 </div>
